@@ -87,18 +87,16 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Mobile */}
+            {/* Mobile / Email / Name */}
             <div>
-              <label className="form-label">{t('auth.mobile')}</label>
+              <label className="form-label">{t('auth.mobile')} / Name / Email</label>
               <input
-                type="tel"
+                type="text"
                 className="form-input"
-                placeholder="10-digit mobile number"
+                placeholder="Mobile number, name, or email"
                 value={form.mobile}
                 onChange={e => setForm(p => ({ ...p, mobile: e.target.value }))}
-                maxLength={10}
-                inputMode="numeric"
-                autoComplete="tel"
+                autoComplete="username"
               />
             </div>
 

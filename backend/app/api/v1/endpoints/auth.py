@@ -6,7 +6,7 @@ File: backend/app/api/v1/endpoints/auth.py
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 
 from app.database.session import get_db
 from app.core.security import hash_password, verify_password, create_access_token, create_refresh_token
@@ -142,7 +142,11 @@ def login(
     """
     query_val = login_data.mobile_or_email.strip()
     user = db.query(User).filter(
-        or_(User.mobile == query_val, User.email == query_val)
+        or_(
+            User.mobile == query_val,
+            func.lower(User.email) == query_val.lower(),
+            func.lower(User.full_name) == query_val.lower(),
+        )
     ).first()
 
     client_ip = request.client.host if request.client else None

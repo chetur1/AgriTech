@@ -160,7 +160,7 @@ class UserLoginRequest(BaseModel):
         if not self.mobile_or_email:
             self.mobile_or_email = self.mobile or self.email
         if not self.mobile_or_email:
-            raise ValueError("Please provide your mobile number or email.")
+            raise ValueError("Please provide your mobile number, email, or name.")
         return self
 
 
