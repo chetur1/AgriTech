@@ -1,0 +1,17 @@
+[
+  {
+    "id": "3d85010c-c766-4671-8fe8-ac8ee8f0b112",
+    "consumer_id": "6cc4cf83-ba4b-42ce-b372-07e81a810466",
+    "consumer_name": "Priya Sharma (Consumer)",
+    "produce_id": "fp-001",
+    "commodity": "Ragi Flour (Organic Stone-Ground)",
+    "quantity_kg": 5.0,
+    "price_per_kg": 65.0,
+    "total_amount": 325.0,
+    "delivery_address": "Flat 402, Green Meadows, Indiranagar, Bengaluru",
+    "contact_mobile": "9876543211",
+    "notes": "Leave with security if not at home",
+    "status": "placed",
+    "created_at": "2026-11-21T15:42:49.671299"
+  }
+]

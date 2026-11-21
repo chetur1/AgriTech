@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useTranslation } from 'react-i18next'
-import { Leaf, Eye, EyeOff, AlertCircle, User, Briefcase } from 'lucide-react'
+import { Leaf, Eye, EyeOff, AlertCircle, User, Briefcase, ShoppingCart, Heart } from 'lucide-react'
 
 const INDIAN_STATES = [
   'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh',
@@ -52,6 +52,15 @@ export default function RegisterPage() {
     qualifications: '',
     specialisation: '',
     institution: '',
+    // broker only
+    business_name: '',
+    business_type: 'Trader',
+    gst_number: '',
+    license_number: '',
+    // consumer only
+    delivery_address: '',
+    preferred_commodities: '',
+    is_organic_preferred: false,
   })
 
   const set = (key) => (e) => setForm(p => ({ ...p, [key]: e.target.value }))
@@ -77,7 +86,12 @@ export default function RegisterPage() {
       const payload = { ...form, role }
       delete payload.confirm_password
       const user = await register(payload)
-      navigate(role === 'farmer' ? '/farmer/dashboard' : '/expert/dashboard', { replace: true })
+      const dest =
+        role === 'farmer' ? '/farmer/dashboard'
+        : role === 'expert' ? '/expert/dashboard'
+        : (role === 'broker' || role === 'buyer') ? '/buyer/dashboard'
+        : '/consumer/dashboard'
+      navigate(dest, { replace: true })
     } catch (err) {
       setError(err.message)
     } finally {
@@ -102,22 +116,24 @@ export default function RegisterPage() {
 
         <div className="card shadow-lg border-0">
           {/* Role selector */}
-          <div className="flex gap-2 mb-6 p-1 bg-gray-100 rounded-xl">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6 p-1 bg-gray-100 rounded-xl">
             {[
-              { value: 'farmer', label: t('auth.farmer'), icon: User },
-              { value: 'expert', label: t('auth.expert'), icon: Briefcase },
+              { value: 'farmer', label: 'Farmer', icon: User },
+              { value: 'expert', label: 'Expert', icon: Briefcase },
+              { value: 'broker', label: 'Broker', icon: ShoppingCart },
+              { value: 'consumer', label: 'Consumer', icon: Heart },
             ].map(({ value, label, icon: Icon }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => setRole(value)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                className={`flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                   role === value
                     ? 'bg-white text-primary-700 shadow-sm'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 h-3.5" />
                 {label}
               </button>
             ))}
@@ -230,9 +246,47 @@ export default function RegisterPage() {
               </>
             )}
 
+            {/* Broker-specific fields */}
+            {role === 'broker' && (
+              <>
+                <div>
+                  <label className="form-label">Business / Agency Name *</label>
+                  <input className="form-input" value={form.business_name} onChange={set('business_name')} placeholder="e.g. Mandya Agri Traders" required />
+                </div>
+                <div>
+                  <label className="form-label">Business Type</label>
+                  <select className="form-input" value={form.business_type} onChange={set('business_type')}>
+                    <option value="Trader">Trader / Commission Agent</option>
+                    <option value="Wholesaler">Wholesaler</option>
+                    <option value="Miller">Miller / Processor</option>
+                    <option value="Exporter">Exporter</option>
+                    <option value="FPO">Farmer Producer Organisation (FPO)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="form-label">APMC License / GST (Optional)</label>
+                  <input className="form-input" value={form.license_number} onChange={set('license_number')} placeholder="APMC license or GSTIN" />
+                </div>
+              </>
+            )}
+
+            {/* Consumer-specific fields */}
+            {role === 'consumer' && (
+              <>
+                <div>
+                  <label className="form-label">Delivery Address *</label>
+                  <textarea rows="2" className="form-input" value={form.delivery_address} onChange={set('delivery_address')} placeholder="Your delivery address for farm fresh orders" required />
+                </div>
+                <div>
+                  <label className="form-label">Produce Preferences</label>
+                  <input className="form-input" value={form.preferred_commodities} onChange={set('preferred_commodities')} placeholder="e.g. Ragi, Rice, Cold-Pressed Oil, Vegetables" />
+                </div>
+              </>
+            )}
+
             <button type="submit" className="btn-primary w-full mt-2" disabled={loading}>
               {loading ? <span className="spinner" /> : null}
-              {loading ? 'Creating account…' : `Register as ${role === 'farmer' ? 'Farmer' : 'Expert'}`}
+              {loading ? 'Creating account…' : `Register as ${role === 'farmer' ? 'Farmer' : role === 'expert' ? 'Expert' : role === 'broker' ? 'Broker / Trader' : 'Consumer'}`}
             </button>
           </form>
 

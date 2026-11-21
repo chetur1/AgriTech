@@ -16,6 +16,8 @@ import PublicLayout from './layouts/PublicLayout'
 import FarmerLayout from './layouts/FarmerLayout'
 import ExpertLayout from './layouts/ExpertLayout'
 import AdminLayout from './layouts/AdminLayout'
+import BuyerLayout from './layouts/BuyerLayout'
+import ConsumerLayout from './layouts/ConsumerLayout'
 
 // Guards
 import ProtectedRoute from './components/auth/ProtectedRoute'
@@ -59,6 +61,18 @@ import UserManagement from './pages/admin/UserManagement'
 import ExpertVerification from './pages/admin/ExpertVerification'
 import AuditLogs from './pages/admin/AuditLogs'
 import AdminSettings from './pages/admin/Settings'
+
+// --- Buyer / Broker Pages ---
+import BuyerDashboard from './pages/buyer/Dashboard'
+import BuyerProduce from './pages/buyer/Produce'
+import BuyerEnquiries from './pages/buyer/Enquiries'
+import BuyerProfile from './pages/buyer/Profile'
+
+// --- Consumer Pages ---
+import ConsumerDashboard from './pages/consumer/Dashboard'
+import ConsumerMarketplace from './pages/consumer/Marketplace'
+import ConsumerOrders from './pages/consumer/Orders'
+import ConsumerProfile from './pages/consumer/Profile'
 
 // Not found
 import NotFoundPage from './pages/NotFoundPage'
@@ -123,6 +137,28 @@ export default function App() {
               <Route path="/admin/expert-verification" element={<ExpertVerification />} />
               <Route path="/admin/audit-logs" element={<AuditLogs />} />
               <Route path="/admin/settings" element={<AdminSettings />} />
+            </Route>
+          </Route>
+
+          {/* ========== BUYER / BROKER ROUTES ========== */}
+          <Route element={<ProtectedRoute allowedRoles={['buyer', 'broker']} />}>
+            <Route element={<BuyerLayout />}>
+              <Route path="/buyer" element={<Navigate to="/buyer/dashboard" replace />} />
+              <Route path="/buyer/dashboard" element={<BuyerDashboard />} />
+              <Route path="/buyer/produce" element={<BuyerProduce />} />
+              <Route path="/buyer/enquiries" element={<BuyerEnquiries />} />
+              <Route path="/buyer/profile" element={<BuyerProfile />} />
+            </Route>
+          </Route>
+
+          {/* ========== CONSUMER ROUTES ========== */}
+          <Route element={<ProtectedRoute allowedRoles={['consumer', 'service_provider']} />}>
+            <Route element={<ConsumerLayout />}>
+              <Route path="/consumer" element={<Navigate to="/consumer/dashboard" replace />} />
+              <Route path="/consumer/dashboard" element={<ConsumerDashboard />} />
+              <Route path="/consumer/marketplace" element={<ConsumerMarketplace />} />
+              <Route path="/consumer/orders" element={<ConsumerOrders />} />
+              <Route path="/consumer/profile" element={<ConsumerProfile />} />
             </Route>
           </Route>
 

@@ -68,6 +68,8 @@ AGRI SMART is a production-oriented, full-stack agricultural intelligence platfo
 | **Administrator** | `9999999999` / `admin@agrismart.in` | `Admin@AgriSmart2024` | Active |
 | **Farmer (Basavaraj Patil)** | `9865432109` | `Farmer@1234` | Active |
 | **Expert (Dr. Suresh Kumar)** | `9876500001` | `Expert@1234` | Verified & Approved |
+| **Broker / Trader (Ramesh Trading)** | `9876543210` | `Broker@1234` | Active & Verified |
+| **Consumer (Priya Sharma)** | `9876543211` | `Consumer@1234` | Active |
 
 ---
 

@@ -16,9 +16,12 @@ const roleDashboard = {
   farmer: '/farmer/dashboard',
   expert: '/expert/dashboard',
   admin:  '/admin/dashboard',
+  broker: '/buyer/dashboard',
+  buyer:  '/buyer/dashboard',
+  consumer: '/consumer/dashboard',
 }
 
-export default function ProtectedRoute({ role }) {
+export default function ProtectedRoute({ role, allowedRoles }) {
   const { isAuthenticated, role: userRole, loading } = useAuth()
   const location = useLocation()
 
@@ -30,8 +33,12 @@ export default function ProtectedRoute({ role }) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  // Logged in but wrong role → redirect to their dashboard
-  if (role && userRole !== role) {
+  // Check role authorization
+  const isAllowed = allowedRoles
+    ? allowedRoles.includes(userRole)
+    : (!role || userRole === role)
+
+  if (!isAllowed) {
     return <Navigate to={roleDashboard[userRole] || '/'} replace />
   }
 

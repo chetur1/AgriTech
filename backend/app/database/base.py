@@ -16,3 +16,4 @@ from app.models import crop  # noqa: F401
 from app.models import ai_diagnosis  # noqa: F401
 from app.models import consultation  # noqa: F401
 from app.models import finance  # noqa: F401
+from app.models import marketplace  # noqa: F401

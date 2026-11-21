@@ -51,3 +51,11 @@ api_router.include_router(finance.router, prefix="/finance", tags=["Finance & Sc
 # Phase 10 Community Forum
 from app.api.v1.endpoints import community
 api_router.include_router(community.router, prefix="/community", tags=["Community Forum"])
+
+# Buyer (Broker) Portal
+from app.api.v1.endpoints import buyer
+api_router.include_router(buyer.router, prefix="/buyer", tags=["Buyer / Broker"])
+
+# Consumer Portal
+from app.api.v1.endpoints import consumer
+api_router.include_router(consumer.router, prefix="/consumer", tags=["Consumer"])

@@ -11,6 +11,7 @@ from sqlalchemy import or_
 from app.database.session import get_db
 from app.core.security import hash_password, verify_password, create_access_token, create_refresh_token
 from app.models.user import User, UserRole, UserStatus, FarmerProfile, ExpertProfile, VerificationStatus, AuditLog
+from app.models.marketplace import BuyerProfile, ConsumerProfile
 from app.schemas.user import UserRegisterRequest, UserLoginRequest, TokenResponse, UserResponse
 from app.api.deps import get_current_active_user
 
@@ -82,6 +83,29 @@ def register(
             verification_status=VerificationStatus.PENDING,
         )
         db.add(expert_profile)
+
+    elif user_in.role in (UserRole.BUYER, UserRole.BROKER):
+        buyer_profile = BuyerProfile(
+            user_id=user.id,
+            business_name=user_in.business_name or f"{user_in.full_name} Trading",
+            business_type=user_in.business_type or "Trader",
+            gst_number=user_in.gst_number,
+            license_number=user_in.license_number,
+            commodities_of_interest=user_in.commodities_of_interest,
+            preferred_districts=user_in.preferred_districts,
+            warehouse_address=user_in.warehouse_address,
+        )
+        db.add(buyer_profile)
+
+    elif user_in.role in (UserRole.CONSUMER, UserRole.SERVICE_PROVIDER):
+        consumer_profile = ConsumerProfile(
+            user_id=user.id,
+            delivery_address=user_in.delivery_address,
+            preferred_commodities=user_in.preferred_commodities,
+            is_organic_preferred=user_in.is_organic_preferred or False,
+            household_size=user_in.household_size or 4,
+        )
+        db.add(consumer_profile)
 
     # 5. Log registration in AuditLog
     client_ip = request.client.host if request.client else None

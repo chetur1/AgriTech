@@ -50,6 +50,44 @@ class ExpertProfileResponse(ExpertProfileBase):
         from_attributes = True
 
 
+class BuyerProfileBase(BaseModel):
+    business_name: str
+    business_type: str = "Trader"
+    gst_number: Optional[str] = None
+    license_number: Optional[str] = None
+    commodities_of_interest: Optional[str] = None
+    preferred_districts: Optional[str] = None
+    warehouse_address: Optional[str] = None
+    max_purchase_quintal: Optional[float] = None
+
+
+class BuyerProfileResponse(BuyerProfileBase):
+    id: uuid.UUID
+    user_id: uuid.UUID
+    is_verified: bool = False
+    verified_at: Optional[datetime] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ConsumerProfileBase(BaseModel):
+    delivery_address: Optional[str] = None
+    preferred_commodities: Optional[str] = None
+    is_organic_preferred: bool = False
+    household_size: Optional[int] = None
+
+
+class ConsumerProfileResponse(ConsumerProfileBase):
+    id: uuid.UUID
+    user_id: uuid.UUID
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 # ---------------------------------------------------------------------------
 # Registration Requests
 # ---------------------------------------------------------------------------
@@ -74,6 +112,21 @@ class UserRegisterRequest(BaseModel):
     # Optional fields for farmer
     total_land_acres: Optional[float] = 0.0
     primary_crops: Optional[str] = None
+
+    # Optional fields for buyer
+    business_name: Optional[str] = None
+    business_type: Optional[str] = "Trader"
+    gst_number: Optional[str] = None
+    license_number: Optional[str] = None
+    commodities_of_interest: Optional[str] = None
+    preferred_districts: Optional[str] = None
+    warehouse_address: Optional[str] = None
+
+    # Optional fields for consumer
+    delivery_address: Optional[str] = None
+    preferred_commodities: Optional[str] = None
+    is_organic_preferred: Optional[bool] = False
+    household_size: Optional[int] = None
 
     @field_validator("email")
     @classmethod
@@ -109,6 +162,8 @@ class UserResponse(BaseModel):
 
     farmer_profile: Optional[FarmerProfileResponse] = None
     expert_profile: Optional[ExpertProfileResponse] = None
+    buyer_profile: Optional[BuyerProfileResponse] = None
+    consumer_profile: Optional[ConsumerProfileResponse] = None
 
     class Config:
         from_attributes = True

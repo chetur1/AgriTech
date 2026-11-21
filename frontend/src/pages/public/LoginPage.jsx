@@ -22,7 +22,14 @@ export default function LoginPage() {
 
   const sessionExpired = new URLSearchParams(location.search).get('expired') === '1'
 
-  const roleDashboard = { farmer: '/farmer/dashboard', expert: '/expert/dashboard', admin: '/admin/dashboard' }
+  const roleDashboard = {
+    farmer: '/farmer/dashboard',
+    expert: '/expert/dashboard',
+    admin: '/admin/dashboard',
+    broker: '/buyer/dashboard',
+    buyer: '/buyer/dashboard',
+    consumer: '/consumer/dashboard',
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()

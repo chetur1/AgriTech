@@ -24,8 +24,9 @@ class UserRole(str, PyEnum):
     FARMER = "farmer"
     EXPERT = "expert"
     ADMIN = "admin"
-    # Reserved for future phases:
     BUYER = "buyer"
+    BROKER = "broker"
+    CONSUMER = "consumer"
     SERVICE_PROVIDER = "service_provider"
 
 
@@ -97,6 +98,12 @@ class User(Base):
     )
     expert_profile: Mapped["ExpertProfile | None"] = relationship(
         "ExpertProfile", back_populates="user", uselist=False, cascade="all, delete-orphan", foreign_keys="ExpertProfile.user_id"
+    )
+    buyer_profile: Mapped["BuyerProfile | None"] = relationship(
+        "BuyerProfile", back_populates="user", uselist=False, cascade="all, delete-orphan", foreign_keys="BuyerProfile.user_id"
+    )
+    consumer_profile: Mapped["ConsumerProfile | None"] = relationship(
+        "ConsumerProfile", back_populates="user", uselist=False, cascade="all, delete-orphan", foreign_keys="ConsumerProfile.user_id"
     )
 
     def __repr__(self) -> str:
