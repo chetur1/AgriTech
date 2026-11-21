@@ -77,11 +77,11 @@ export default function KnowledgeBase() {
       {/* Title */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <BookOpen className="w-6 h-6 text-green-700" />
-          Agricultural Knowledge Base & RAG Library
+          <Sparkles className="w-6 h-6 text-emerald-600" />
+          Agricultural AI Knowledge Base (Powered by Google Gemini AI)
         </h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Verified Package of Practices, ICAR research bulletins, and AI-grounded retrieval engine
+          Real-time agronomic reasoning powered by Google Gemini AI and grounded in ICAR & UAS Bangalore packages of practices.
         </p>
       </div>
 
@@ -105,8 +105,8 @@ export default function KnowledgeBase() {
               : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          <Sparkles className="w-4 h-4 text-amber-500" />
-          Expert RAG Intelligence Tester
+          <Sparkles className="w-4 h-4 text-emerald-500" />
+          Gemini AI Agricultural Advisory
         </button>
       </div>
 
@@ -211,13 +211,12 @@ export default function KnowledgeBase() {
       {/* TAB 2: RAG Tester */}
       {activeTab === 'rag_tester' && (
         <div className="space-y-6">
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 flex items-start gap-2.5">
-            <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs text-emerald-900 flex items-start gap-2.5">
+            <Sparkles className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold">Grounding Verification for Agricultural Experts</p>
-              <p className="mt-0.5 text-amber-800">
-                Queries tested here use AGRI SMART's deterministic hybrid retrieval (BM25/TF-IDF)
-                indexed over UAS Bangalore and ICAR publications. Grounded answers must always cite their empirical source.
+              <p className="font-semibold">Powered by Google Gemini AI (gemini-3.1-flash-lite)</p>
+              <p className="mt-0.5 text-emerald-800">
+                Queries are answered directly by Google Gemini AI with deep agronomic reasoning, organic and chemical remedies, and ICAR Package of Practices guidelines.
               </p>
             </div>
           </div>

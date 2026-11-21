@@ -71,7 +71,10 @@ class Settings(BaseSettings):
     BHASHINI_USER_ID: str = ""
     BHASHINI_API_KEY: str = ""
     BHASHINI_PIPELINE_ID: str = ""
+    # --- Gemini AI Configuration ---
     GEMINI_API_KEY: str = ""
+    GEMINI_PROJECT_NUMBER: str = ""
+    GEMINI_MODEL: str = "gemini-3.1-flash-lite"
     OPENAI_API_KEY: str = ""
 
     class Config:

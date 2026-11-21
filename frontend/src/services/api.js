@@ -94,11 +94,11 @@ export const weatherAPI = {
 // ---------------------------------------------------------------------------
 
 export const farmAPI = {
-  list: ()            => api.get('/farms'),
-  get: (id)           => api.get(`/farms/${id}`),
-  create: (data)      => api.post('/farms', data),
-  update: (id, data)  => api.patch(`/farms/${id}`, data),
-  delete: (id)        => api.delete(`/farms/${id}`),
+  list: () => api.get('/farms'),
+  get: (id) => api.get(`/farms/${id}`),
+  create: (data) => api.post('/farms', data),
+  update: (id, data) => api.patch(`/farms/${id}`, data),
+  delete: (id) => api.delete(`/farms/${id}`),
 }
 
 // ---------------------------------------------------------------------------
@@ -106,11 +106,11 @@ export const farmAPI = {
 // ---------------------------------------------------------------------------
 
 export const cropAPI = {
-  list: (farmId)      => api.get('/crops', { params: { farm_id: farmId } }),
-  get: (id)           => api.get(`/crops/${id}`),
-  create: (data)      => api.post('/crops', data),
-  update: (id, data)  => api.patch(`/crops/${id}`, data),
-  delete: (id)        => api.delete(`/crops/${id}`),
+  list: (farmId) => api.get('/crops', { params: { farm_id: farmId } }),
+  get: (id) => api.get(`/crops/${id}`),
+  create: (data) => api.post('/crops', data),
+  update: (id, data) => api.patch(`/crops/${id}`, data),
+  delete: (id) => api.delete(`/crops/${id}`),
 }
 
 // ---------------------------------------------------------------------------
@@ -134,7 +134,7 @@ export const aiAPI = {
 
 export const marketAPI = {
   getPrices: (params) => api.get('/market/prices', { params }),
-  getCommodities: ()  => api.get('/market/commodities'),
+  getCommodities: () => api.get('/market/commodities'),
   getMarkets: (district) => api.get('/market/markets', { params: { district } }),
 }
 
@@ -143,12 +143,12 @@ export const marketAPI = {
 // ---------------------------------------------------------------------------
 
 export const expertAPI = {
-  getDashboard:       ()        => api.get('/experts/dashboard'),
-  getPendingDiagnoses:(params)  => api.get('/experts/pending-diagnoses', { params }),
-  getDiagnosis:       (id)      => api.get(`/experts/diagnoses/${id}`),
-  submitReview:       (id, data)=> api.post(`/experts/diagnoses/${id}/review`, data),
-  getFarmers:         ()        => api.get('/experts/farmers'),
-  getProfile:         ()        => api.get('/experts/profile'),
+  getDashboard: () => api.get('/experts/dashboard'),
+  getPendingDiagnoses: (params) => api.get('/experts/pending-diagnoses', { params }),
+  getDiagnosis: (id) => api.get(`/experts/diagnoses/${id}`),
+  submitReview: (id, data) => api.post(`/experts/diagnoses/${id}/review`, data),
+  getFarmers: () => api.get('/experts/farmers'),
+  getProfile: () => api.get('/experts/profile'),
 }
 
 // ---------------------------------------------------------------------------
@@ -157,10 +157,10 @@ export const expertAPI = {
 
 export const financeAPI = {
   getExpenses: (params) => api.get('/finance/expenses', { params }),
-  addExpense: (data)    => api.post('/finance/expenses', data),
-  getIncome: (params)   => api.get('/finance/income', { params }),
-  addIncome: (data)     => api.post('/finance/income', data),
-  getSummary: (params)  => api.get('/finance/summary', { params }),
+  addExpense: (data) => api.post('/finance/expenses', data),
+  getIncome: (params) => api.get('/finance/income', { params }),
+  addIncome: (data) => api.post('/finance/income', data),
+  getSummary: (params) => api.get('/finance/summary', { params }),
 }
 
 // ---------------------------------------------------------------------------
@@ -168,10 +168,10 @@ export const financeAPI = {
 // ---------------------------------------------------------------------------
 
 export const consultationAPI = {
-  list: ()          => api.get('/consultations'),
-  get: (id)         => api.get(`/consultations/${id}`),
-  create: (data)    => api.post('/consultations', data),
-  respond: (id, d)  => api.post(`/consultations/${id}/respond`, d),
+  list: () => api.get('/consultations'),
+  get: (id) => api.get(`/consultations/${id}`),
+  create: (data) => api.post('/consultations', data),
+  respond: (id, d) => api.post(`/consultations/${id}/respond`, d),
 }
 
 // ---------------------------------------------------------------------------
@@ -179,9 +179,9 @@ export const consultationAPI = {
 // ---------------------------------------------------------------------------
 
 export const notificationAPI = {
-  list: ()          => api.get('/notifications'),
-  markRead: (id)    => api.patch(`/notifications/${id}/read`),
-  markAllRead: ()   => api.patch('/notifications/read-all'),
+  list: () => api.get('/notifications'),
+  markRead: (id) => api.patch(`/notifications/${id}/read`),
+  markAllRead: () => api.patch('/notifications/read-all'),
 }
 
 // ---------------------------------------------------------------------------
