@@ -11,6 +11,19 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { authAPI } from '../services/api'
 
+const formatApiError = (err, fallback) => {
+  const detail = err.response?.data?.detail
+  if (!detail) return err.message || fallback
+  if (typeof detail === 'string') return detail
+  if (Array.isArray(detail)) {
+    return detail.map(d => (typeof d === 'string' ? d : d.msg || d.message || JSON.stringify(d))).join(', ')
+  }
+  if (typeof detail === 'object') {
+    return detail.msg || detail.message || JSON.stringify(detail)
+  }
+  return String(detail)
+}
+
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -57,7 +70,7 @@ export function AuthProvider({ children }) {
       setUser(userData)
       return userData
     } catch (err) {
-      const message = err.response?.data?.detail || 'Login failed. Please try again.'
+      const message = formatApiError(err, 'Login failed. Please try again.')
       setError(message)
       throw new Error(message)
     }
@@ -75,7 +88,7 @@ export function AuthProvider({ children }) {
       setUser(userData)
       return userData
     } catch (err) {
-      const message = err.response?.data?.detail || 'Registration failed. Please try again.'
+      const message = formatApiError(err, 'Registration failed. Please try again.')
       setError(message)
       throw new Error(message)
     }

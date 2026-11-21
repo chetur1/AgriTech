@@ -11,6 +11,7 @@ from app.models.user import (
 from app.models.farm import Farm
 from app.models.crop import Crop, CropActivity
 from app.models.finance import Expense, Income
+from app.models.marketplace import BuyerProfile, ConsumerProfile
 
 __all__ = [
     "User",
@@ -25,4 +26,6 @@ __all__ = [
     "CropActivity",
     "Expense",
     "Income",
+    "BuyerProfile",
+    "ConsumerProfile",
 ]

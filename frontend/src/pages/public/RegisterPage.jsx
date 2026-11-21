@@ -43,8 +43,8 @@ export default function RegisterPage() {
     mobile: '',
     password: '',
     confirm_password: '',
-    preferred_language: 'en',
-    state: '',
+    preferred_language: 'kn',
+    state: 'Karnataka',
     district: '',
     village: '',
     // expert only
@@ -85,6 +85,14 @@ export default function RegisterPage() {
     try {
       const payload = { ...form, role }
       delete payload.confirm_password
+
+      // Remove empty optional strings so Pydantic doesn't fail on email="" or nulls
+      Object.keys(payload).forEach(k => {
+        if (typeof payload[k] === 'string' && !payload[k].trim()) {
+          delete payload[k]
+        }
+      })
+
       const user = await register(payload)
       const dest =
         role === 'farmer' ? '/farmer/dashboard'
@@ -93,7 +101,7 @@ export default function RegisterPage() {
         : '/consumer/dashboard'
       navigate(dest, { replace: true })
     } catch (err) {
-      setError(err.message)
+      setError(typeof err === 'string' ? err : err.message || 'Registration failed')
     } finally {
       setLoading(false)
     }

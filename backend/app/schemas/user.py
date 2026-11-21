@@ -6,7 +6,7 @@ File: backend/app/schemas/user.py
 import uuid
 from typing import Optional, List
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 from app.models.user import UserRole, UserStatus, VerificationStatus
 
@@ -128,6 +128,15 @@ class UserRegisterRequest(BaseModel):
     is_organic_preferred: Optional[bool] = False
     household_size: Optional[int] = None
 
+    @field_validator("email", mode="before")
+    @classmethod
+    def clean_email(cls, v):
+        if v is None:
+            return None
+        if isinstance(v, str) and not v.strip():
+            return None
+        return v
+
     @field_validator("email")
     @classmethod
     def check_email_for_expert(cls, v, info):
@@ -141,8 +150,18 @@ class UserRegisterRequest(BaseModel):
 # ---------------------------------------------------------------------------
 
 class UserLoginRequest(BaseModel):
-    mobile_or_email: str
+    mobile_or_email: Optional[str] = None
+    mobile: Optional[str] = None
+    email: Optional[str] = None
     password: str
+
+    @model_validator(mode="after")
+    def assemble_identifier(self):
+        if not self.mobile_or_email:
+            self.mobile_or_email = self.mobile or self.email
+        if not self.mobile_or_email:
+            raise ValueError("Please provide your mobile number or email.")
+        return self
 
 
 class UserResponse(BaseModel):
