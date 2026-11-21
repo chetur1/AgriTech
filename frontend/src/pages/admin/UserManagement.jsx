@@ -1,0 +1,1 @@
+export default function UserManagement() { return (<div className='page-container'><h1 className='text-2xl font-bold text-gray-900 mb-4'>Admin: UserManagement</h1><div className='card py-16 text-center text-gray-400'>Coming in Phase 11</div></div>) }

@@ -1,0 +1,1 @@
+# AGRI SMART — package inits

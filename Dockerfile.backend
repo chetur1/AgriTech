@@ -1,0 +1,70 @@
+# ============================================================
+# AGRI SMART — Production Backend Dockerfile
+# Multi-stage Python build optimized for performance and security
+# ============================================================
+
+FROM python:3.11-slim as builder
+
+# Install system dependencies needed for compiling C extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Install dependencies into wheels directory
+COPY backend/requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+
+# ------------------------------------------------------------
+# Final Production Runtime Stage
+# ------------------------------------------------------------
+FROM python:3.11-slim
+
+# Create dedicated non-root user for security
+RUN groupadd -g 1001 agrismart && \
+    useradd -u 1001 -g agrismart -s /bin/bash -m agrismart
+
+# Install runtime shared libraries (libpq for postgres, curl for healthcheck)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy wheels from builder stage and install
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+RUN pip install --no-cache /wheels/* && rm -rf /wheels
+
+# Copy application source code
+COPY backend/app ./app
+COPY backend/alembic ./alembic
+COPY backend/alembic.ini .
+
+# Create uploads directory and set permissions
+RUN mkdir -p /app/uploads /app/data && \
+    chown -R agrismart:agrismart /app
+
+USER agrismart
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PORT=8000 \
+    APP_ENV=production
+
+EXPOSE 8000
+
+# Health check probe
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8000/api/health || exit 1
+
+# Start Uvicorn with production settings
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4", "--proxy-headers"]
