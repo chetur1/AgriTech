@@ -130,6 +130,7 @@ class FarmerProfile(Base):
         index=True,
     )
 
+    farmer_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     total_land_acres: Mapped[float | None] = mapped_column(Float, nullable=True, default=0.0)
     primary_crops: Mapped[str | None] = mapped_column(String(255), nullable=True)
     irrigation_source: Mapped[str | None] = mapped_column(String(100), nullable=True)

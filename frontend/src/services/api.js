@@ -184,4 +184,18 @@ export const notificationAPI = {
   markAllRead: ()   => api.patch('/notifications/read-all'),
 }
 
+// ---------------------------------------------------------------------------
+// Admin API  (Phase 11)
+// ---------------------------------------------------------------------------
+
+export const adminAPI = {
+  getStats:           ()             => api.get('/admin/stats'),
+  getSystemInfo:      ()             => api.get('/admin/system-info'),
+  getUsers:           (params)       => api.get('/admin/users', { params }),
+  getPendingExperts:  ()             => api.get('/admin/experts/pending'),
+  verifyExpert:       (id, payload)  => api.post(`/admin/experts/${id}/verify`, payload),
+  updateUserStatus:   (id, payload)  => api.patch(`/admin/users/${id}/status`, payload),
+  getAuditLogs:       (params)       => api.get('/admin/audit-logs', { params }),
+}
+
 export default api
