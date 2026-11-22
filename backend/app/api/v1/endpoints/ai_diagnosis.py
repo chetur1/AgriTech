@@ -16,6 +16,7 @@ from app.models.user import User, UserRole
 from app.models.ai_diagnosis import AIDiagnosis
 from app.schemas.ai_diagnosis import AIDiagnosisResponse
 from app.crop_ai.classifier import crop_classifier
+from app.services.gemini_service import gemini_service
 
 router = APIRouter()
 
@@ -55,8 +56,19 @@ async def diagnose_crop_image(
 
     image_url = f"/uploads/crop_images/{filename}"
 
-    # 4. Run deep neural prediction
-    prediction = crop_classifier.predict(img, crop_hint=crop_name)
+    # 4. Run AI vision prediction (Google Gemini AI Multimodal Vision with fallback to local CNN)
+    mime_type = "image/jpeg"
+    if ext.lower() in [".png"]:
+        mime_type = "image/png"
+    elif ext.lower() in [".webp"]:
+        mime_type = "image/webp"
+
+    prediction = None
+    if gemini_service.is_available():
+        prediction = gemini_service.diagnose_crop_image(contents, mime_type=mime_type, crop_hint=crop_name)
+
+    if not prediction:
+        prediction = crop_classifier.predict(img, crop_hint=crop_name)
 
     # 5. Parse crop_id UUID if provided
     parsed_crop_id = None

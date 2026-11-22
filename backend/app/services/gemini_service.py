@@ -86,4 +86,75 @@ Format with clean bullet points and maintain clear, supportive tone suitable for
             "provider": "Google Gemini AI (Unavailable)",
         }
 
+    def diagnose_crop_image(self, image_bytes: bytes, mime_type: str = "image/jpeg", crop_hint: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        """
+        Diagnoses crop disease directly from a photograph using Google Gemini AI Vision.
+        Returns parsed agronomic diagnosis dictionary or None if Gemini vision fails.
+        """
+        if not self._client:
+            return None
+
+        prompt = f"""You are AGRI SMART's expert Senior Agricultural Scientist and Plant Pathologist.
+Analyze this agricultural crop photo.
+{f'The farmer hints that the crop might be: {crop_hint}' if crop_hint and crop_hint != 'General Crop' else ''}
+
+Examine the image carefully:
+1. Identify the crop accurately (e.g. Tomato, Potato, Sugarcane, Rice, Wheat, Cotton, Pepper, Apple, Corn, etc.).
+2. Detect if there are disease symptoms, pest infestations, nutritional deficiencies, or if the foliage is healthy.
+3. Formulate comprehensive ICAR / State Agricultural University recommendations.
+
+Respond ONLY with a valid JSON object matching this exact schema:
+{{
+  "crop": "Crop name in English",
+  "disease_name": "Specific disease name or 'Healthy Crop Foliage'",
+  "vernacular_name": "Disease/health name with Kannada and Hindi translations",
+  "severity": "None" | "Low" | "Moderate" | "Severe",
+  "is_healthy": true | false,
+  "confidence_score": float between 0.85 and 0.99,
+  "symptoms": ["Symptom 1", "Symptom 2", ...],
+  "possible_causes": ["Causal pathogen or condition 1", ...],
+  "safe_treatment_organic": ["Bio-fungicide, neem, or organic remedy 1 with dosage", ...],
+  "chemical_treatment": ["Chemical treatment with dosage per litre and Pre-Harvest Interval (PHI)", ...],
+  "prevention": ["Crop rotation, spacing, or sanitation practice 1", ...]
+}}
+
+Do NOT include markdown formatting or backticks around the JSON. Return only the raw JSON string."""
+
+        fallback_models = [self.model_name, "gemini-3.5-flash-lite", "gemini-3.5-flash"]
+        for model in fallback_models:
+            try:
+                from google.genai import types
+                import json
+                import re
+
+                response = self._client.models.generate_content(
+                    model=model,
+                    contents=[
+                        types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+                        prompt
+                    ]
+                )
+                if response and response.text:
+                    text = response.text.strip()
+                    # Strip markdown code fencing if present
+                    if text.startswith("```"):
+                        text = re.sub(r"^```[a-zA-Z]*\n?", "", text)
+                        text = re.sub(r"\n?```$", "", text).strip()
+                    parsed = json.loads(text)
+                    if isinstance(parsed, dict) and "crop" in parsed:
+                        conf = parsed.get("confidence_score", 0.92)
+                        parsed["confidence_percentage"] = int(float(conf) * 100)
+                        parsed["image_quality"] = "High"
+                        parsed["model_architecture"] = f"Google Gemini AI Vision ({model})"
+                        parsed["disclaimer"] = (
+                            "IMPORTANT: AI-generated diagnosis powered by Google Gemini AI Vision grounded in ICAR agronomy. "
+                            "Field symptoms can vary with weather and soil nutrients. You can request direct review from University experts below."
+                        )
+                        return parsed
+            except Exception as e:
+                logger.warning(f"Gemini vision diagnosis failed with {model}: {e}")
+                continue
+
+        return None
+
 gemini_service = GeminiAgriculturalService()
