@@ -13,7 +13,7 @@ import { useSearchParams } from 'react-router-dom'
 import {
   CheckCircle2, Edit3, XCircle, Loader2, RefreshCw,
   Leaf, AlertTriangle, ChevronRight, Filter, Eye,
-  ShieldCheck, Calendar, User, MapPin
+  ShieldCheck, Calendar, User, MapPin, Camera
 } from 'lucide-react'
 import api from '../../services/api'
 
